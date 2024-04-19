@@ -3,7 +3,10 @@
 ![2](https://user-images.githubusercontent.com/40702606/103156831-dfce9b00-47a4-11eb-9551-af8ffee11bd0.png)
 
 ## Objectif of this course
-![img.png](img.png)
+![img.png](src/main/resources/static/img.png)
+![img_1.png](src/main/resources/static/img_1.png)
+![img_2.png](src/main/resources/static/img_2.png)
+![img_3.png](src/main/resources/static/img_3.png)
 
 ## Course Description
 
