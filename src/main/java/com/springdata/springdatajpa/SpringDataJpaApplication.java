@@ -19,39 +19,39 @@ public class SpringDataJpaApplication {
         return args -> {
           Student houssam = new Student("houssam","baaloul","houssam.baaloul78@gmail.com",24);
           Student abir = new Student("abir","baaloul","abir.baaloul5@gmail.com",23);
+          Student abir2 = new Student("abir","baaloul","abir.baaloul55@gmail.com",21);
 
-          System.out.println("Adding houssam and abir");
-          studentRepository.saveAll(List.of(houssam, abir));
+          System.out.println("Adding houssam and abir and abir2");
+          studentRepository.saveAll(List.of(houssam, abir,abir2));
 
-          System.out.println("Number of students: ");
-          System.out.println(studentRepository.count());
 
+          System.out.println("Finding sutdent with email : abir.baaloul5@gmail.com");
           studentRepository
-                  .findById(2L)
+                  .findStudentByEmail("abir.baaloul5@gmail.com")
                   .ifPresentOrElse(
                           System.out::println,
-                          ()->System.out.println("Student with id 2 notFound")
+                          ()->System.out.println("Student with email : abir.baaloul5@gmail.com not found")
                   );
 
-            studentRepository
-                    .findById(3L)
-                    .ifPresentOrElse(
-                            System.out::println,
-                            ()->System.out.println("Student with id 3 notFound")
-                    );
+          studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(
+                  "abir",
+                  21
+          ).forEach(System.out::println);
 
-            System.out.println("Select all students");
-            List<Student> students = studentRepository.findAll();
-            students.forEach(System.out::println);
+          studentRepository.chercherStudenatApartieDeSonNom("baaloul")
+                  .forEach(System.out::println);
 
-            System.out.println("Delete houssam");
-            studentRepository.deleteById(1L);
+          studentRepository.chercherStudenatApartieDeSonPrenomNativeQuery("houssam")
+                  .forEach(System.out::println);
 
-            System.out.println("Number of students: ");
-            System.out.println(studentRepository.count());
+          studentRepository.chercherStudenatApartieDeSonPrenomNativeQueryUsingNamedParam("houssam")
+                  .forEach(System.out::println);
 
         };
-    }
+
+        }
 
 
 }
+
+
