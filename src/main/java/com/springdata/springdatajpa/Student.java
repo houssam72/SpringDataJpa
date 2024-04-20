@@ -3,6 +3,12 @@ package com.springdata.springdatajpa;
 import jakarta.persistence.*;
 
 @Entity(name= "Student")
+@Table(
+        name="student",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "student_email_unique",columnNames = "email")
+        }
+)
 public class Student {
 
     @Id
@@ -17,7 +23,6 @@ public class Student {
     )
     @Column(
             name="id",
-            unique = true,
             updatable = false,
             nullable = false
     )
@@ -39,7 +44,6 @@ public class Student {
 
     @Column(
             name="email",
-            unique = true,
             nullable = false,
             columnDefinition = "TEXT"
     )
@@ -51,8 +55,7 @@ public class Student {
     )
     private Integer age;
 
-    public Student(Long id, String firstName, String lastName, String email, Integer age) {
-        this.id = id;
+    public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
