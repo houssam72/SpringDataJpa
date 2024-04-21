@@ -1,9 +1,13 @@
 package com.springdata.springdatajpa;
 
+import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -17,39 +21,47 @@ public class SpringDataJpaApplication {
     @Bean
     CommandLineRunner commandLineRunner(StudentRepository studentRepository){
         return args -> {
-          Student houssam = new Student("houssam","baaloul","houssam.baaloul78@gmail.com",24);
-          Student abir = new Student("abir","baaloul","abir.baaloul5@gmail.com",23);
-          Student abir2 = new Student("abir","baaloul","abir.baaloul55@gmail.com",21);
 
-          System.out.println("Adding houssam and abir and abir2");
-          studentRepository.saveAll(List.of(houssam, abir,abir2));
+            generateRandomStudents(studentRepository);
 
-
-          System.out.println("Finding sutdent with email : abir.baaloul5@gmail.com");
-          studentRepository
-                  .findStudentByEmail("abir.baaloul5@gmail.com")
-                  .ifPresentOrElse(
-                          System.out::println,
-                          ()->System.out.println("Student with email : abir.baaloul5@gmail.com not found")
-                  );
-
-          studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(
-                  "abir",
-                  21
-          ).forEach(System.out::println);
-
-          studentRepository.chercherStudenatApartieDeSonNom("baaloul")
-                  .forEach(System.out::println);
-
-          studentRepository.chercherStudenatApartieDeSonPrenomNativeQuery("houssam")
-                  .forEach(System.out::println);
-
-          studentRepository.chercherStudenatApartieDeSonPrenomNativeQueryUsingNamedParam("houssam")
-                  .forEach(System.out::println);
+            sortingAndPagination(studentRepository);
 
         };
+    }
 
+    private void sortingAndPagination(StudentRepository studentRepository){
+        PageRequest pageRequest = PageRequest.of(
+                0
+                ,5
+                ,Sort.by("firstName").ascending());
+
+        Page<Student> page= studentRepository.findAll(pageRequest);
+        System.out.println(page);
+
+    }
+
+    private void sorting(StudentRepository studentRepository){
+        Sort sort= Sort.by("firstName").ascending().and(Sort.by("age").descending());
+
+        studentRepository.findAll(sort)
+                .forEach(student -> System.out.println(student.getFirstName()+" "+student.getAge()));
+    }
+
+
+    private void generateRandomStudents(StudentRepository studentRepository){
+        Faker faker = new Faker();
+        for(int i=0; i<=100; i++){
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email= String.format("%s.%s@alHoussam.edu",firstName,lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17,55));
+            studentRepository.save(student);
         }
+    }
 
 
 }
