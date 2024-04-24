@@ -1,8 +1,9 @@
-package com.springdata.springdatajpa;
+package com.springdata.springdatajpa.Student;
 
+import com.springdata.springdatajpa.StudentCard.StudentCard;
 import jakarta.persistence.*;
 
-@Entity(name= "Student")
+@Entity(name= "student")
 @Table(
         name="student",
         uniqueConstraints = {
@@ -55,6 +56,12 @@ public class Student {
     )
     private Integer age;
 
+    @OneToOne(
+            mappedBy = "student",
+            cascade = CascadeType.ALL
+    )
+    private StudentCard studentCard;
+
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,13 +73,6 @@ public class Student {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;

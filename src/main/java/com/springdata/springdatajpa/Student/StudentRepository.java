@@ -1,4 +1,4 @@
-package com.springdata.springdatajpa;
+package com.springdata.springdatajpa.Student;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
 
     List<Student> findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(String firstName,Integer age);
 
-    @Query("SELECT s FROM Student s WHERE s.lastName=?1")
+    @Query("SELECT s FROM student s WHERE s.lastName=?1")
     List<Student> chercherStudenatApartieDeSonNom(String lastName);
 
     @Query(value = "select * from student where first_name=?1",nativeQuery = true)

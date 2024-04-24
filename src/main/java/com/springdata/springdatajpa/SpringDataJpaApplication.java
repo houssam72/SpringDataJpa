@@ -1,6 +1,10 @@
 package com.springdata.springdatajpa;
 
 import com.github.javafaker.Faker;
+import com.springdata.springdatajpa.Student.Student;
+import com.springdata.springdatajpa.Student.StudentRepository;
+import com.springdata.springdatajpa.StudentCard.StudentCard;
+import com.springdata.springdatajpa.StudentCard.StudentCardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,8 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
 
 @SpringBootApplication
 public class SpringDataJpaApplication {
@@ -19,13 +21,30 @@ public class SpringDataJpaApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository){
+    CommandLineRunner commandLineRunner(StudentCardRepository StudentCardRepository , StudentRepository studentRepository) {
         return args -> {
+            Faker faker = new Faker();
 
-            generateRandomStudents(studentRepository);
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@alHoussam.edu", firstName, lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17, 55));
 
-            sortingAndPagination(studentRepository);
+            StudentCard studentCard = new StudentCard("123456789123456",student);
 
+            StudentCardRepository.save(studentCard);
+
+            studentRepository.findById(1L)
+                    .ifPresent(System.out::println);
+
+            StudentCardRepository.findById(1L)
+                    .ifPresent(System.out::println);
+
+            StudentCardRepository.deleteById(1L);
         };
     }
 
