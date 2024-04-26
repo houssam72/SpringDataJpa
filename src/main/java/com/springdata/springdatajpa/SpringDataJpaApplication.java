@@ -1,6 +1,7 @@
 package com.springdata.springdatajpa;
 
 import com.github.javafaker.Faker;
+import com.springdata.springdatajpa.Book.Book;
 import com.springdata.springdatajpa.Student.Student;
 import com.springdata.springdatajpa.Student.StudentRepository;
 import com.springdata.springdatajpa.StudentCard.StudentCard;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @SpringBootApplication
 public class SpringDataJpaApplication {
@@ -36,15 +40,29 @@ public class SpringDataJpaApplication {
 
             StudentCard studentCard = new StudentCard("123456789123456",student);
 
-            StudentCardRepository.save(studentCard);
+            student.addBook(new Book("one piece", LocalDate.now().plusDays(2)));
+            student.addBook(new Book("Naruto", LocalDate.now().plusDays(3)));
+            student.addBook(new Book("Dragon Ball ", LocalDate.now()));
+
+            student.setStudentCard(studentCard);
+
+            studentRepository.save(student);
 
             studentRepository.findById(1L)
-                    .ifPresent(System.out::println);
-
-            StudentCardRepository.findById(1L)
-                    .ifPresent(System.out::println);
-
-            StudentCardRepository.deleteById(1L);
+                    .ifPresent(s->{
+                        System.out.println("fetch book lazy...");
+                        List<Book> books = student.getBooks();
+                        books.forEach(book->{
+                            System.out.println(
+                                    s.getFirstName() + " borrwed  " + book.getBookName()
+                            );
+                        });
+                    });
+//
+//            StudentCardRepository.findById(1L)
+//                    .ifPresent(System.out::println);
+//
+//            StudentCardRepository.deleteById(1L);
         };
     }
 
