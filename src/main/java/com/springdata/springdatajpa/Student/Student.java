@@ -1,6 +1,7 @@
 package com.springdata.springdatajpa.Student;
 
 import com.springdata.springdatajpa.Book.Book;
+import com.springdata.springdatajpa.Course;
 import com.springdata.springdatajpa.StudentCard.StudentCard;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -71,6 +72,21 @@ public class Student {
     )
     private StudentCard studentCard;
 
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE}
+    )
+    @JoinTable(
+            name = "enrolment",
+            joinColumns = @JoinColumn(
+                    name = "student_id",
+                    foreignKey = @ForeignKey(name = "enrolment_student_id_fk")
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "course_id",
+                    foreignKey = @ForeignKey(name = "enrolment_course_id_fk")
+            )
+    )
+    private List<Course> courses = new ArrayList<>();
 
 
     public Student(String firstName, String lastName, String email, Integer age) {
@@ -144,6 +160,16 @@ public class Student {
             books.remove(book);
             book.setStudent(null);
         }
+    }
+
+    public void enrolToCourse(Course course){
+        courses.add(course);
+        course.getStudents().add(this);
+    }
+
+    public void unEnrolToCourse(Course course){
+        courses.remove(course);
+        course.getStudents().remove(this);
     }
 
     @Override

@@ -46,6 +46,11 @@ public class SpringDataJpaApplication {
 
             student.setStudentCard(studentCard);
 
+            student.enrolToCourse(new Course("Computer Science","IT"));
+            student.enrolToCourse(new Course("Amigoscode Spring Data Jpa","IT"));
+            student.enrolToCourse(new Course("CodeEvolution","TECH"));
+
+
             studentRepository.save(student);
 
             studentRepository.findById(1L)
