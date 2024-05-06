@@ -2,6 +2,9 @@ package com.springdata.springdatajpa;
 
 import com.github.javafaker.Faker;
 import com.springdata.springdatajpa.Book.Book;
+import com.springdata.springdatajpa.Course.Course;
+import com.springdata.springdatajpa.Enrolment.Enrolment;
+import com.springdata.springdatajpa.Enrolment.EnrolmentId;
 import com.springdata.springdatajpa.Student.Student;
 import com.springdata.springdatajpa.Student.StudentRepository;
 import com.springdata.springdatajpa.StudentCard.StudentCard;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
@@ -46,9 +50,14 @@ public class SpringDataJpaApplication {
 
             student.setStudentCard(studentCard);
 
-            student.enrolToCourse(new Course("Computer Science","IT"));
-            student.enrolToCourse(new Course("Amigoscode Spring Data Jpa","IT"));
-            student.enrolToCourse(new Course("CodeEvolution","TECH"));
+            Course CSCourse= new Course("Computer Science","IT");
+            Course AmigosCourse= new Course("Amigoscode Spring Data Jpa","IT");
+            Course CodeCourse= new Course("CodeEvolution","TECH");
+
+            student.addEnrolment(new Enrolment(new EnrolmentId(student.getId(), CSCourse.getId()) ,student,CSCourse, LocalDateTime.now()));
+            student.addEnrolment(new Enrolment(new EnrolmentId(student.getId(), AmigosCourse.getId()) ,student,AmigosCourse, LocalDateTime.now().minusDays(5)));
+            student.addEnrolment(new Enrolment(new EnrolmentId(student.getId(), CodeCourse.getId()) ,student,CodeCourse, LocalDateTime.now().minusMonths(8)));
+
 
 
             studentRepository.save(student);

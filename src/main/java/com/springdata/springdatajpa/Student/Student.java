@@ -1,7 +1,7 @@
 package com.springdata.springdatajpa.Student;
 
 import com.springdata.springdatajpa.Book.Book;
-import com.springdata.springdatajpa.Course;
+import com.springdata.springdatajpa.Enrolment.Enrolment;
 import com.springdata.springdatajpa.StudentCard.StudentCard;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -72,21 +72,10 @@ public class Student {
     )
     private StudentCard studentCard;
 
-    @ManyToMany(
+    @OneToMany(
             cascade = {CascadeType.PERSIST,CascadeType.REMOVE}
     )
-    @JoinTable(
-            name = "enrolment",
-            joinColumns = @JoinColumn(
-                    name = "student_id",
-                    foreignKey = @ForeignKey(name = "enrolment_student_id_fk")
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "course_id",
-                    foreignKey = @ForeignKey(name = "enrolment_course_id_fk")
-            )
-    )
-    private List<Course> courses = new ArrayList<>();
+    private List<Enrolment> enrolments = new ArrayList<>();
 
 
     public Student(String firstName, String lastName, String email, Integer age) {
@@ -162,15 +151,19 @@ public class Student {
         }
     }
 
-    public void enrolToCourse(Course course){
-        courses.add(course);
-        course.getStudents().add(this);
-    }
+   public List<Enrolment> getEnrolments() {
+        return enrolments;
+   }
 
-    public void unEnrolToCourse(Course course){
-        courses.remove(course);
-        course.getStudents().remove(this);
-    }
+   public void addEnrolment(Enrolment enrolment){
+        if(!enrolments.contains(enrolment)){
+            enrolments.add(enrolment);
+        }
+   }
+
+   public void removeEnrolment(Enrolment enrolment){
+        enrolments.remove(enrolment);
+   }
 
     @Override
     public String toString() {
